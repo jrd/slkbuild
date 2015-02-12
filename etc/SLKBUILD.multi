@@ -1,0 +1,77 @@
+# vim: syn=sh ft=sh et sw=2 sts=2 ts=2 tw=0:
+#Packager: Name <email@address.com>
+#Former Packager(s): Name <email@address.com>
+#Anything commented out is optional and can be deleted.
+
+pkgname=
+pkgver=
+pkgrel=
+#arch=noarch
+source=()
+#sourcetemplate=http://people.salixos.org/yournick/$pkgname/$pkgver/
+#docs=("readme" "install" "copying" "changelog" "authors" "news" "todo")
+#url=
+#dotnew=()
+#CFLAGS=
+#CXXFLAGS=
+#options=('noextract')
+
+#multi=('subpkg1' 'subpkg2')
+#subpkg1_docs=("my" "special" "doc list")
+#subpkg2_options=('noautodotnew')
+
+#doinst() {
+#
+#}
+
+#subpkg1_doinst() {
+#
+#}
+
+#subpkg2_doinst() {
+#
+#}
+
+slackdesc=\
+(
+#|-----handy-ruler------------------------------------------------------|
+"${pkgname} (short desc)"
+)
+
+subpkg1_slackdesc=\
+(
+#|-----handy-ruler------------------------------------------------------|
+"${pkgname}-subpkg1 (short desc)"
+)
+
+subpkg2_slackdesc=\
+(
+#|-----handy-ruler------------------------------------------------------|
+"${pkgname}-subpkg1 (short desc)"
+)
+
+build() {
+	cd $SRC/${pkgname}-${pkgver}
+	./configure \
+    --prefix=/usr \
+    --libdir=/usr/lib${LIBDIRSUFFIX} \
+    --localstatedir=/var \
+    --sysconfdir=/etc \
+    --build=$arch-slackware-linux \
+    || return 1
+	make -j $numjobs || return 1
+	make install DESTDIR=$PKG || return 1
+
+	cd $SRC/${pkgname}-sub1-${pkgver}
+	./configure \
+    --prefix=/usr \
+    --libdir=/usr/lib${LIBDIRSUFFIX} \
+    --localstatedir=/var \
+    --sysconfdir=/etc \
+    --build=$arch-slackware-linux \
+    || return 1
+	make -j $numjobs || return 1
+	make install DESTDIR=${PKG}_subpkg1 || return 1
+
+	mv $PKG/somefile ${PKG}_subpkg2/
+}

@@ -159,6 +159,21 @@ variables.
 This is the script that runs after a package is installed, so put any
 commands in here that you wan't to be run after the package is
 installed.
+: **multi**
+An array that takes names of sub packages to build using this SLKBUILD.
+The names should only use a-z, A-Z, underscore and hyphen characters.
+Those packages will have the same version and build as the main package.
+The build process of these packages should take place in the build() script
+but the result files should be place in //$startdir/pkg_NAME// or
+//${PKG}_NAME// where //NAME// is one name in the array.
+Some global variables could be overwritten per subpackage by prefixing them
+with the package name + underscore.
+Those variables are //slackdesc// (mandatory), //doinst()//, //docs//,
+//options// and //dotnew//.
+For example do specify a different documention list for subpackage //sub1//,
+use //sub1_docs=("README")//.
+Only some options are overwritable: //nostrip//, //noautodotnew//, //keepla//
+and //nolinkprepend//.
 : **Custom Variables**
 Custom variables can also be added, so that they are used in the
 //build()// function. These variables should have a name that starts
@@ -168,6 +183,7 @@ with an underscore.
 == AUTHOR ==
 
 George Vlahavas <vlahavas~at~gmail~dot~com>.
+Cyrille Pontvieux <jrd~at~salixos~dot~org>.
 
 
 == SEE ALSO ==
