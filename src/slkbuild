@@ -152,6 +152,11 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+if [ -f "${startdir}/SLKBUILD.gz" ]; then
+    echo "SLKBUILD.gz found in directory, unzipping"
+    zcat ${startdir}/SLKBUILD.gz > ${startdir}/SLKBUILD
+fi
+
 #If arch is not set, determine it automatically
 if [ -z "$arch" ]; then
     case "$( uname -m )" in
@@ -169,7 +174,7 @@ if [ -f "${startdir}/SLKBUILD" ]; then
           slackdesc doinst build docs sourcetemplate
     . ${startdir}/SLKBUILD
 else
-    err "No SLKBUILD found in directory, see slkbuild --help"
+    err "No SLKBUILD nor SLKBUILD.gz found in directory, see slkbuild --help"
 fi
 
 ##################Sanity Tests Begin######################################
@@ -604,7 +609,7 @@ EODOTNEW
 
 copy_build_script() {
     mkdir -p $startdir/pkg/usr/src/$pkgname-$pkgver/
-    [ -f $startdir/SLKBUILD ] && cp $startdir/SLKBUILD $startdir/pkg/usr/src/$pkgname-$pkgver/SLKBUILD
+    [ -f $startdir/SLKBUILD ] && gzip -c $startdir/SLKBUILD > $startdir/pkg/usr/src/$pkgname-$pkgver/SLKBUILD.gz
 }
 
 create_package() {
